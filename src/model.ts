@@ -5,21 +5,21 @@
  * Returns a ChatAnthropic instance configured with claude-sonnet-4-20250514 and maxTokens: 4096.
  */
 
-import { ChatAnthropic } from "@langchain/anthropic";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { LanguageModelLike } from "./types.js";
 
 /**
  * Get the default model for Deep Agents
  *
- * Returns a ChatAnthropic instance configured exactly like the Python version:
- * - model: "claude-sonnet-4-20250514"
- * - maxTokens: 4096
+ * Returns a ChatGoogleGenerativeAI instance configured to use Gemini:
+ * - model: "gemini-1.5-pro"
+ * - maxOutputTokens: 4096
  *
- * @returns ChatAnthropic instance with default configuration
+ * @returns ChatGoogleGenerativeAI instance with default configuration
  */
 export function getDefaultModel(): LanguageModelLike {
-  return new ChatAnthropic({
-    model: "claude-sonnet-4-20250514",
-    maxTokens: 4096,
+  return new ChatGoogleGenerativeAI({
+    model: "gemini-2.5-pro",
+    maxOutputTokens: 4096,
   });
 }
