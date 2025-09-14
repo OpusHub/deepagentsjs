@@ -65,7 +65,7 @@ export function createTaskTool<
         } else {
           // eslint-disable-next-line no-console
           console.warn(
-            `Warning: Tool '${toolName}' not found for agent '${subagent.name}'`,
+            `Warning: Tool '${toolName}' not found for agent '${subagent.name}'`
           );
         }
       }
@@ -88,7 +88,7 @@ export function createTaskTool<
   return tool(
     async (
       input: { description: string; subagent_type: string },
-      config: ToolRunnableConfig,
+      config: ToolRunnableConfig
     ) => {
       const { description, subagent_type } = input;
 
@@ -151,7 +151,7 @@ export function createTaskTool<
       description:
         TASK_DESCRIPTION_PREFIX.replace(
           "{other_agents}",
-          subagents.map((a) => `- ${a.name}: ${a.description}`).join("\n"),
+          subagents.map((a) => `- ${a.name}: ${a.description}`).join("\n")
         ) + TASK_DESCRIPTION_SUFFIX,
       schema: z.object({
         description: z
@@ -160,9 +160,9 @@ export function createTaskTool<
         subagent_type: z
           .string()
           .describe(
-            `Name of the agent to use. Available: ${subagents.map((a) => a.name).join(", ")}`,
+            `Name of the agent to use. Available: ${subagents.map((a) => a.name).join(", ")}`
           ),
       }),
-    },
+    }
   );
 }

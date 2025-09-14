@@ -46,11 +46,11 @@ export const writeTodos = tool(
             status: z
               .enum(["pending", "in_progress", "completed"])
               .describe("Status of the todo"),
-          }),
+          })
         )
         .describe("List of todo items to update"),
     }),
-  },
+  }
 );
 
 /**
@@ -67,7 +67,7 @@ export const ls = tool(
     name: "ls",
     description: "List all files in the mock filesystem",
     schema: z.object({}),
-  },
+  }
 );
 
 /**
@@ -137,7 +137,7 @@ export const readFile = tool(
         .default(2000)
         .describe("Maximum number of lines to read"),
     }),
-  },
+  }
 );
 
 /**
@@ -147,7 +147,7 @@ export const readFile = tool(
 export const writeFile = tool(
   (
     input: { file_path: string; content: string },
-    config: ToolRunnableConfig,
+    config: ToolRunnableConfig
   ) => {
     const state = getCurrentTaskInput<DeepAgentStateType>();
     const files = { ...(state.files || {}) };
@@ -172,7 +172,7 @@ export const writeFile = tool(
       file_path: z.string().describe("Absolute path to the file to write"),
       content: z.string().describe("Content to write to the file"),
     }),
-  },
+  }
 );
 
 /**
@@ -187,7 +187,7 @@ export const editFile = tool(
       new_string: string;
       replace_all?: boolean;
     },
-    config: ToolRunnableConfig,
+    config: ToolRunnableConfig
   ) => {
     const state = getCurrentTaskInput<DeepAgentStateType>();
     const mockFilesystem = { ...(state.files || {}) };
@@ -210,7 +210,7 @@ export const editFile = tool(
     if (!replace_all) {
       const escapedOldString = old_string.replace(
         /[.*+?^${}()|[\]\\]/g,
-        "\\$&",
+        "\\$&"
       );
       const occurrences = (
         content.match(new RegExp(escapedOldString, "g")) || []
@@ -228,11 +228,11 @@ export const editFile = tool(
     if (replace_all) {
       const escapedOldString = old_string.replace(
         /[.*+?^${}()|[\]\\]/g,
-        "\\$&",
+        "\\$&"
       );
       newContent = content.replace(
         new RegExp(escapedOldString, "g"),
-        new_string,
+        new_string
       );
     } else {
       newContent = content.replace(old_string, new_string);
@@ -268,5 +268,5 @@ export const editFile = tool(
         .default(false)
         .describe("Whether to replace all occurrences"),
     }),
-  },
+  }
 );

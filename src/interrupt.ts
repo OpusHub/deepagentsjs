@@ -11,7 +11,7 @@ import {
 
 export function createInterruptHook(
   toolConfigs: ToolInterruptConfig,
-  messagePrefix: string = "Tool execution requires approval",
+  messagePrefix: string = "Tool execution requires approval"
 ): (state: DeepAgentStateType) => Promise<Partial<DeepAgentStateType> | void> {
   /**
    * Create a post model hook that handles interrupts using native LangGraph schemas.
@@ -28,13 +28,13 @@ export function createInterruptHook(
       interruptConfig.allow_ignore
     ) {
       throw new Error(
-        `For ${tool} we get allow_ignore = true - we currently don't support ignore.`,
+        `For ${tool} we get allow_ignore = true - we currently don't support ignore.`
       );
     }
   });
 
   return async function interruptHook(
-    state: DeepAgentStateType,
+    state: DeepAgentStateType
   ): Promise<Partial<DeepAgentStateType> | void> {
     const messages = state.messages || [];
     if (!messages.length) {
@@ -70,7 +70,7 @@ export function createInterruptHook(
 
     if (interruptToolCalls.length > 1) {
       throw new Error(
-        "Right now, interrupt hook only works when one tool requires interrupts",
+        "Right now, interrupt hook only works when one tool requires interrupts"
       );
     }
 

@@ -81,7 +81,7 @@ export function createDeepAgent<
   // Filter built-in tools if builtinTools parameter is provided
   const selectedBuiltinTools = builtinTools
     ? BUILTIN_TOOLS.filter((tool) =>
-        builtinTools.some((bt) => bt === tool.name),
+        builtinTools.some((bt) => bt === tool.name)
       )
     : BUILTIN_TOOLS;
 
@@ -115,7 +115,7 @@ export function createDeepAgent<
   if (postModelHook && Object.keys(interruptConfig).length > 0) {
     throw new Error(
       "Cannot specify both postModelHook and interruptConfig together. " +
-        "Use either interruptConfig for tool interrupts or postModelHook for custom post-processing.",
+        "Use either interruptConfig for tool interrupts or postModelHook for custom post-processing."
     );
   }
 
