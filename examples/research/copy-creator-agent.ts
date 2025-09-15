@@ -325,7 +325,7 @@ This is a SURGICAL PRECISION SYSTEM for creating high-conversion copies. Each st
 ## 🎯 EXPECTED RESULT:
 A system that replicates the process of a specialized copywriting agency, ensuring consistently superior outputs through in-depth analysis, sound strategy, and flawless execution.`;
 
-// Create the specialized copy creator agent
+// Create the specialized copy creator agent with error handling
 const copyCreatorAgent = createDeepAgent({
   tools: [
     internetSearch,
@@ -341,25 +341,73 @@ const copyCreatorAgent = createDeepAgent({
     copyCreationAgent,
     qualityAssuranceAgent,
   ],
-}).withConfig({ recursionLimit: 1000 });
+}).withConfig({
+  recursionLimit: 1000,
+  // Add error handling configuration
+  configurable: {
+    max_retries: 3,
+    retry_delay: 2000, // 2 seconds between retries
+  }
+});
+
+// Robust invoke function with error handling
+async function invokeWithRetry(input: any, maxRetries = 3, delayMs = 2000) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`🔄 Attempt ${attempt}/${maxRetries} - Invoking copy creator agent...`);
+
+      const result = await copyCreatorAgent.invoke(input, {
+        configurable: {
+          timeout: 120000, // 2 minutes timeout per attempt
+        }
+      });
+
+      console.log(`✅ Success on attempt ${attempt}`);
+      return result;
+
+    } catch (error) {
+      console.error(`❌ Attempt ${attempt} failed:`, error.message);
+
+      // Check if it's a stream parsing error
+      if (error.message.includes('Failed to parse stream') ||
+          error.message.includes('GoogleGenerativeAI Error')) {
+
+        if (attempt === maxRetries) {
+          throw new Error(`❌ Copy creator failed after ${maxRetries} attempts. Last error: ${error.message}`);
+        }
+
+        console.log(`⏳ Retrying in ${delayMs}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        continue;
+      }
+
+      // For other errors, throw immediately
+      throw error;
+    }
+  }
+}
 
 // Invoke the agent
 async function main() {
-  const result = await copyCreatorAgent.invoke({
-    messages: [
-      {
-        role: "user",
-        content: `Crie copies para:
+  try {
+    const result = await invokeWithRetry({
+      messages: [
+        {
+          role: "user",
+          content: `Crie copies para:
 Nome do cliente: João Silva Construções
 Região: São Paulo, SP
 Serviço: Instalação de pisos laminados
 Ofertas: 20% de desconto para os 10 primeiros agendamentos
 Telefone: (11) 99999-9999
 Reviews Google: Sim, incluir`,
-      },
-    ],
-  });
-  console.log(result);
+        },
+      ],
+    });
+    console.log(result);
+  } catch (error) {
+    console.error('🚨 Final error:', error.message);
+  }
 }
 
 export { copyCreatorAgent, internetSearch };
