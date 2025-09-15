@@ -22,6 +22,7 @@
 /dist-examples
 **/dist-examples
 .turbo/
+/docs
 
 # misc
 .DS_Store
