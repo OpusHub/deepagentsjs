@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createDeepAgent } from "../../src/index.js";
+import { createDeepAgent } from "../../dist/index.js";
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import "dotenv/config";

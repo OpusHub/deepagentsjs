@@ -1,4 +1,4 @@
-import { type SubAgent } from "../../../src/index.js";
+import { type SubAgent } from "../../../dist/index.js";
 
 const hookStrategyPrompt = `Você é um especialista em psicologia do consumidor e criação de hooks persuasivos.
 Use EXCLUSIVAMENTE os insights do Market Research Agent para criar hooks estratégicos.

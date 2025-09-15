@@ -1,4 +1,4 @@
-import { type SubAgent } from "../../../src/index.js";
+import { type SubAgent } from "../../../dist/index.js";
 
 const copyCreationPrompt = `Você é um copywriter expert treinado com 17 copies validadas de alta conversão.
 Crie copies de 30-40 segundos seguindo EXATAMENTE os padrões das copies de referência.

@@ -1,4 +1,4 @@
-import { type SubAgent } from "../../../src/index.js";
+import { type SubAgent } from "../../../dist/index.js";
 
 const marketResearchPrompt = `Você é um especialista em análise de mercado para o setor de construção e home improvement.
 Sua única responsabilidade é analisar o mercado local e criar personas detalhadas.

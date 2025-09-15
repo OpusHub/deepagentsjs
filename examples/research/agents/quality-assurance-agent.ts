@@ -1,4 +1,4 @@
-import { type SubAgent } from "../../../src/index.js";
+import { type SubAgent } from "../../../dist/index.js";
 
 const qualityAssurancePrompt = `Você é um auditor de copy que garante a qualidade final das copies criadas.
 Analise cada copy e forneça score de 1-10 baseado nos critérios validados pelas 17 copies de alta conversão.
