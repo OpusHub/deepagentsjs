@@ -20,14 +20,14 @@ import { LanguageModelLike } from "./types.js";
  */
 export function getDefaultModel(): LanguageModelLike {
   return new ChatGoogleGenerativeAI({
-    model: "gemini-1.5-flash",  // More stable than 2.5 Pro for streaming
+    model: "gemini-1.5-pro",  // More stable than 2.5 Pro for streaming
     maxOutputTokens: 4096,
     temperature: 0.7,
     topK: 40,
     topP: 0.95,
     // Add retry configuration to handle stream parsing errors
     maxRetries: 3,
-    // Re-enable streaming since 1.5 Flash is more stable
+    // Re-enable streaming since 1.5 Pro is more stable
     streaming: true,
   }) as any;
 }
