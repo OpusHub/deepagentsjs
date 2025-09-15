@@ -76,8 +76,8 @@ export function createTaskTool<
 
     // Create react agent for the subagent (pre-create like Python)
     const reactAgent = createReactAgent({
-      llm: model,
-      tools: subagentTools,
+      llm: model as any,
+      tools: subagentTools as any,
       stateSchema,
       messageModifier: subagent.prompt,
     });

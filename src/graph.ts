@@ -62,7 +62,7 @@ export function createDeepAgent<
   ContextSchema extends
     | AnyAnnotationRoot
     | InteropZodObject = AnyAnnotationRoot,
->(params: CreateDeepAgentParams<StateSchema, ContextSchema> = {}) {
+>(params: CreateDeepAgentParams<StateSchema, ContextSchema> = {}): any {
   const {
     tools = [],
     instructions,
@@ -134,8 +134,8 @@ export function createDeepAgent<
     Record<string, any>,
     ContextSchema
   >({
-    llm: model,
-    tools: allTools,
+    llm: model as any,
+    tools: allTools as any,
     stateSchema,
     messageModifier: finalInstructions,
     contextSchema,

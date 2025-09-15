@@ -21,5 +21,5 @@ export function getDefaultModel(): LanguageModelLike {
   return new ChatGoogleGenerativeAI({
     model: "gemini-2.5-pro",
     maxOutputTokens: 4096,
-  });
+  }) as any;
 }

@@ -46,7 +46,7 @@ export function todoReducer(
  * DeepAgentState using LangGraph's Annotation.Root() pattern
  * Extends MessagesAnnotation (equivalent to Python's AgentState) with todos and files channels
  */
-export const DeepAgentState = MessagesZodState.extend({
+export const DeepAgentState: any = MessagesZodState.extend({
   todos: withLangGraph(z.custom<Todo[]>(), {
     reducer: {
       schema: z.custom<Todo[]>(),
