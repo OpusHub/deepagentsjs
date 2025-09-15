@@ -34,8 +34,11 @@ COPY --from=build /app/examples ./examples
 # Install LangGraph CLI for JavaScript/TypeScript
 RUN npm install -g @langchain/langgraph-cli
 
-# Copy environment file
-COPY .env* ./
+# Copy script to create .env dynamically
+COPY create-env.sh ./
+
+# Make script executable
+RUN chmod +x create-env.sh
 
 # Set working directory to where langgraph.json exists
 WORKDIR /app/examples/research
@@ -47,5 +50,5 @@ EXPOSE $PORT
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:$PORT/health || exit 1
 
-# Start LangGraph CLI server from the research directory
-CMD ["sh", "-c", "npx @langchain/langgraph-cli dev --host 0.0.0.0 --port ${PORT:-8080}"]
+# Create .env file from Railway environment variables and start server
+CMD ["sh", "-c", "../../create-env.sh && npx @langchain/langgraph-cli dev --host 0.0.0.0 --port ${PORT:-8080}"]
