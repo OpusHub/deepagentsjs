@@ -1,10 +1,9 @@
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { LanguageModelLike } from "./types.js";
 
 export function getDefaultModel(): LanguageModelLike {
-  return new ChatOpenAI({
-    model: "gpt-4o",
-    maxTokens: 4096,
+  return new ChatGoogleGenerativeAI({
+    model: "gemini-1.5-pro",
     temperature: 0.3,
     maxRetries: 3,
     streaming: true,
@@ -14,7 +13,7 @@ export function getDefaultModel(): LanguageModelLike {
           process.stdout.write(token);
         },
         handleLLMError(err: any) {
-          console.error("Erro no stream OpenAI:", err);
+          console.error("Erro no stream Gemini:", err);
         },
         handleLLMEnd() {
           console.log("\n--- Stream finalizado ---");
