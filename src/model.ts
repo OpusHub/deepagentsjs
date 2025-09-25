@@ -3,11 +3,19 @@ import { LanguageModelLike } from "./types.js";
 
 export function getDefaultModel(): LanguageModelLike {
   return new ChatOpenAI({
-    model: "gpt-5.1",
+    model: "o4-mini-deep-research",
     maxTokens: 4096,
     temperature: 0.5,
     maxRetries: 3,
     streaming: true,
+    modelKwargs: {
+      // Habilita caching para prompts repetidos (75% desconto)
+      cache_prompt: true,
+      // Controla o reasoning effort (low/medium/high)
+      reasoning_effort: "medium",
+      // Para deep research tasks
+      response_format: { type: "text" }
+    },
     callbacks: [
       {
         handleLLMNewToken(token: string) {
