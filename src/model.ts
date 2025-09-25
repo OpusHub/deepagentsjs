@@ -3,9 +3,9 @@ import { LanguageModelLike } from "./types.js";
 
 export function getDefaultModel(): LanguageModelLike {
   return new ChatOpenAI({
-    model: "o1-mini",
+    model: "gpt-4o",
     maxTokens: 4096,
-    temperature: 0.5,
+    temperature: 0.3,
     maxRetries: 3,
     streaming: true,
     callbacks: [
