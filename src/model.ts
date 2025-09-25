@@ -3,7 +3,7 @@ import { LanguageModelLike } from "./types.js";
 
 export function getDefaultModel(): LanguageModelLike {
   return new ChatOpenAI({
-    model: "o4-mini-deep-research",
+    model: "o1-mini",
     maxTokens: 4096,
     temperature: 0.5,
     maxRetries: 3,
