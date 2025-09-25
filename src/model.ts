@@ -8,14 +8,6 @@ export function getDefaultModel(): LanguageModelLike {
     temperature: 0.5,
     maxRetries: 3,
     streaming: true,
-    modelKwargs: {
-      // Habilita caching para prompts repetidos (75% desconto)
-      cache_prompt: true,
-      // Controla o reasoning effort (low/medium/high)
-      reasoning_effort: "medium",
-      // Para deep research tasks
-      response_format: { type: "text" }
-    },
     callbacks: [
       {
         handleLLMNewToken(token: string) {
