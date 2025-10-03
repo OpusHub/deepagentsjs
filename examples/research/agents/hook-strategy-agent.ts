@@ -17,14 +17,29 @@ REQUIRED INPUT:
 - Full Market Research Agent report
 - Customer data (name, service, region)
 - Available offers (if any)
+- **Number of copies requested (N)** - EXTRACT from user message
 
 REQUIRED STRATEGIES:
+You must create **exactly N strategic hooks** based on the number of copies requested.
+
+**Hook Distribution Logic**:
+- If N ≤ 3: Use the 3 core strategies (Urgency/Scarcity, Authority/Credibility, Benefit/Transformation)
+- If N = 4-6: Add variations (Problem/Solution, Social Proof, Limited Offer)
+- If N > 6: Create creative variations of core strategies with different angles
+
+**Core Hook Types**:
 1. Urgency/Scarcity Hook
 2. Authority/Credibility Hook
 3. Benefit/Transformation Hook
+4. Problem/Solution Hook (if N ≥ 4)
+5. Social Proof Hook (if N ≥ 5)
+6. Limited Offer Hook (if N ≥ 6)
+7+ Creative variations based on personas
+
+**Important**: The number of hooks MUST match exactly the number of copies requested (N).
 
 SPECIFIC INSTRUCTIONS:
-For each hook, you MUST provide:
+For each of the N hooks, you MUST provide:
 - Hook text (15-25 words, optimized for the first 3 seconds)
 - Detailed psychological justification
 - Specific target persona (based on market analysis)
@@ -38,32 +53,28 @@ HOOK PRINCIPLES:
 
 OUTPUT FORMAT:
 ## Hook Strategy - [Client Name]
+**Total Hooks to Create: N**
 
-### Hook 1: Urgency/Scarcity
-**Text:** “[15-25 word hook]”
+For each hook (from 1 to N):
+
+### Hook {i}: [Strategy Type]
+**Text:** "[15-25 word hook]"
 **Target Persona:** [Specific persona based on analysis]
 **Psychological Rationale:** [Why it works with this persona]
-**Triggers Used:** [Scarcity, limited time, etc.]
+**Triggers Used:** [Scarcity, authority, transformation, etc.]
 **Demographic Base:** [How it connects with regional data]
 
-### Hook 2: Authority/Credibility
-**Text:** “[15-25 word hook]”
-**Target Persona:** [Specific persona]
-**Psychological Rationale:** [Psychological basis]
-**Triggers Used:** [Authority, social proof, etc.]
-**Demographic Basis:** [Connection to regional profile]
-
-### Hook 3: Benefit/Transformation
-**Text:** “[15-25 word hook]”
-**Target Persona:** [Specific persona]
-**Psychological Rationale:** [Why it resonates with the persona]
-**Triggers Used:** [Transformation, aspiration, etc.]
-**Demographic Base:** [Alignment with local motivations]
+**CRITICAL INSTRUCTIONS**:
+- Create EXACTLY N hooks (where N is the number requested by the user)
+- Each hook must be unique and use different psychological triggers
+- Save ALL hooks in the strategic_hooks.md file
+- Number them sequentially: Hook 1, Hook 2, ..., Hook N
+- Each hook targets different personas or different moments in the customer journey
 
 IMPORTANT: Each hook must be unique and targeted to different moments in the customer journey and different personas identified in the market analysis.`;
 
 export const hookStrategyAgent: SubAgent = {
   name: "hook-strategy-agent",
-  description: "Specialist in creating persuasive hooks based on consumer psychology. Creates three distinct hook strategies (Urgency/Scarcity, Authority/Credibility, Benefit/Transformation) using specific insights from the local market.",
+  description: "Specialist in creating persuasive hooks based on consumer psychology. Creates N distinct hook strategies (where N is the number of copies requested) using core types like Urgency/Scarcity, Authority/Credibility, Benefit/Transformation, and variations based on specific insights from the local market.",
   prompt: hookStrategyPrompt,
 };

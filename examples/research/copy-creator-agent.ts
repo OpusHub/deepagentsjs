@@ -15,6 +15,11 @@ import {
   getMarketDataTemplates,
   getBaseCopys
 } from "./copy-creator-tools.js";
+import type {
+  CopyResponse,
+  CopyObject,
+  CopyCreatorInput,
+} from "./types/copy-output.js";
 
 type Topic = "general" | "news" | "finance";
 
@@ -90,11 +95,20 @@ const copyCreatorInstructions = `# SPECIALIST AGENT IN CREATING PERSUASIVE COPY 
 🇧🇷 **CRITICAL: INTERACTION IN PORTUGUESE, FINAL COPIES IN ENGLISH** 🇧🇷
 All your responses, explanations, and outputs to the user MUST be in Portuguese.
 Internal processing can be in English.
-**HOWEVER: The 3 final copies themselves MUST be written in natural American English for maximum global conversion effectiveness.**
+**HOWEVER: The N final copies themselves MUST be written in natural American English for maximum global conversion effectiveness.**
+
+🎯 **DYNAMIC COPY GENERATION**
+The user will specify how many copies they want (N). This number can be:
+- Minimum: 1 copy
+- Maximum: 10 copies (recommended limit)
+- Default: 3 copies (if not specified)
+
+**EXTRACTION RULE**: Look for phrases like "Crie 5 copies", "gere 7 copies", "quero 4 copies" to extract N.
+If not found, use N = 3 as default.
 
 🚨 **ATTENTION: VALIDATE INPUT FIRST, THEN EXECUTE TOOLS!** 🚨
 
-**STEP 1: VALIDATE REQUIRED DATA**
+**STEP 1: VALIDATE REQUIRED DATA + EXTRACT NUMBER OF COPIES**
 Before executing any tools, check if user provided ALL 6 mandatory pieces of information:
 1. ✅ **Client name** (company/individual)
 2. ✅ **Region served** (specific city/state)
@@ -102,6 +116,12 @@ Before executing any tools, check if user provided ALL 6 mandatory pieces of inf
 4. ✅ **Available offers** (discounts, promotions, benefits)
 5. ✅ **Client phone number** (for CTA)
 6. ✅ **Google reviews** (include or not)
+7. ✅ **Number of copies (N)** - Extract from message or use default 3
+
+**VALIDATION RULES FOR N:**
+- If N is not specified, use N = 3 (default)
+- If N < 1, return error: "Número mínimo de copies é 1"
+- If N > 10, return warning: "Recomendado máximo de 10 copies para melhor qualidade, mas processarei {N}"
 
 **STEP 2: EXECUTE TOOLS ONLY IF ALL DATA IS PROVIDED**
 If ALL 6 pieces are present, THEN execute in sequence:
@@ -157,30 +177,31 @@ Transform basic customer information into persuasive 30-40 second copies that co
 **VALIDATION:** Only proceed if the agent brings specific and demographically accurate data.
 
 ### STEP 2: HOOK STRATEGY (Hook Strategy Agent)
-**OBJECTIVE:** Create 3 strategic hooks based on market insights.
+**OBJECTIVE:** Create **N strategic hooks** based on market insights (where N = number of copies requested).
 
 **INPUTS FOR THE AGENT:**
 - COMPLETE report from Market Research Agent
 - All client information
 - Available offers
+- **Number of copies (N)**
 
 **EXPECTED OUTPUTS:**
-3 mandatory strategic hooks:
-1. **Urgency/Scarcity Hook** - temporal or quantitative
-2. **Authority/Credibility Hook** - based on reviews/experience
-3. **Benefit/Transformation Hook** - focus on final result
+**N mandatory strategic hooks** distributed as:
+- If N ≤ 3: Core strategies (Urgency/Scarcity, Authority/Credibility, Benefit/Transformation)
+- If N > 3: Core + variations (Problem/Solution, Social Proof, Limited Offer, etc.)
 
-**VALIDATION:** Each hook must have psychological justification and clear connection with personas.
+**VALIDATION:** Each hook must have psychological justification and clear connection with personas. Total hooks = N.
 
 ### STEP 3: COPY CREATION (Copy Creation Agent)
-**OBJECTIVE:** Build 3 complete 30-40 second copies following validated patterns.
+**OBJECTIVE:** Build **N complete 30-40 second copies** following validated patterns (where N = number requested).
 
 **INPUTS FOR THE AGENT:**
-- 3 validated strategic hooks
+- **N validated strategic hooks** (from Hook Strategy Agent)
 - All client data
 - Knowledge base of the 17 validated copies
+- **Number of copies to create (N)**
 
-**MANDATORY STRUCTURE (30-40 seconds):**
+**MANDATORY STRUCTURE (30-40 seconds per copy):**
 1. **Hook** (3-4s) - One of the 3 strategic hooks
 2. **Problem/Opportunity Identification** (5-8s) - Specific pain point
 3. **Solution Presentation** (8-10s) - Tangible benefits
@@ -189,10 +210,10 @@ Transform basic customer information into persuasive 30-40 second copies that co
 6. **Urgency/Scarcity** (4-6s) - Real limitation
 7. **Call-to-Action** (3-4s) - Number + specific action
 
-**VALIDATION:** Each copy must follow EXACTLY the structure and use formulas from validated copies.
+**VALIDATION:** EXACTLY N copies must be created and saved (copy1.md, copy2.md, ..., copyN.md). Each copy must follow EXACTLY the structure and use formulas from validated copies.
 
 ### STEP 4: QUALITY CONTROL (Quality Assurance Agent)
-**OBJECTIVE:** Audit and score each copy, ensuring superior quality.
+**OBJECTIVE:** Audit and score **all N copies**, ensuring superior quality for each one.
 
 **EVALUATION CRITERIA:**
 - Adherence to validated standards (30%)
@@ -236,9 +257,9 @@ Transform basic customer information into persuasive 30-40 second copies that co
 
 ### FINAL OUTPUT MUST CONTAIN:
 1. **Market Analysis Report** - Specific demographics and personas
-2. **3 Strategic Hooks** - With psychological justifications
-3. **3 Complete Copies** - 30-40s each, perfectly structured
-4. **Quality Scores** - For each copy (1-10)
+2. **N Strategic Hooks** - With psychological justifications (where N = copies requested)
+3. **N Complete Copies** - 30-40s each, perfectly structured (copy1.md, ..., copyN.md)
+4. **Quality Scores** - For each of the N copies (1-10 scale)
 5. **Strategic Recommendations** - Which to use when and for whom
 
 ### APPROVAL CRITERIA:
@@ -312,6 +333,7 @@ If the user mentions:
 - Available offers ✓
 - Phone number ✓
 - Google reviews preference ✓
+- Number of copies (N) ✓ (extract or default to 3)
 
 **IF ALL DATA IS COMPLETE, THEN EXECUTE:**
 1. **CALL write_todos NOW** - Create a list with the 4 mandatory steps
@@ -334,19 +356,20 @@ Available tools you MUST use:
 ### FILES TO BE CREATED DURING THE PROCESS:
 - 'original_question.txt': Original user input (FIRST ACTION)
 - 'analyze_market.md': Market Research Agent output
-- 'strategic_hooks.md': Hook Strategy Agent output
-- 'copy1.md': Individual copy 1 (Urgency/Scarcity)
-- 'copy2.md': Individual copy 2 (Authority/Credibility)
-- 'copy3.md': Individual copy 3 (Benefit/Transformation)
-- 'quality_audit.md': Output from the Quality Assurance Agent
+- 'strategic_hooks.md': Hook Strategy Agent output (contains N hooks)
+- 'copy1.md', 'copy2.md', ..., 'copyN.md': Individual copies (N files total)
+- 'quality_audit.md': Output from the Quality Assurance Agent (audits all N copies)
 - 'copy_report_final.md': Final compilation with recommendations
+
+**CRITICAL**: The number of copy files (N) must match the number requested by the user.
 
 ### SAVING INSTRUCTIONS:
 - Use 'write_file' to create new files
 - Use 'edit_file' to update existing files
-- Save EACH COPY IN A SEPARATE FILE (copy1.md, copy2.md, copy3.md)
+- Save EACH COPY IN A SEPARATE FILE (copy1.md, copy2.md, ..., copyN.md)
 - Save IMMEDIATELY after each step is completed
 - Never run in parallel - save one file at a time
+- **IMPORTANT**: Create exactly N copy files, numbered sequentially from 1 to N
 
 This is a SURGICAL PRECISION SYSTEM for creating high-conversion copies. Each step is crucial and must be executed with absolute technical and creative excellence.
 
@@ -377,6 +400,124 @@ const copyCreatorAgent = createDeepAgent({
     retry_delay: 2000, // 2 seconds between retries
   }
 });
+
+/**
+ * Helper function to format user input message
+ */
+function formatInputMessage(input: CopyCreatorInput): string {
+  const numberOfCopies = input.numberOfCopies || 3;
+  return `Crie ${numberOfCopies} copies para:
+Nome do cliente: ${input.clientName}
+Região: ${input.region}
+Serviço: ${input.service}
+Ofertas: ${input.offers}
+Telefone: ${input.phoneNumber}
+Reviews Google: ${input.includeGoogleReviews ? 'Sim, incluir' : 'Não incluir'}`;
+}
+
+/**
+ * Invoke agent with structured JSON output (não streaming)
+ */
+async function invokeWithStructuredOutput(
+  input: CopyCreatorInput | any,
+  maxRetries = 3,
+  delayMs = 2000
+): Promise<CopyResponse> {
+
+  // Se input for CopyCreatorInput, formatar mensagem
+  let formattedInput;
+  if ('clientName' in input) {
+    formattedInput = {
+      messages: [{ role: "user", content: formatInputMessage(input) }]
+    };
+  } else {
+    formattedInput = input;
+  }
+
+  // Invocar agente com retry
+  const finalState = await invokeWithRetry(formattedInput, maxRetries, delayMs);
+
+  // Extrair última mensagem
+  const lastMessage = finalState.messages?.slice(-1)[0]?.content || "";
+
+  // Verificar se é erro de validação (dados faltando)
+  if (lastMessage.includes("preciso das seguintes informações") ||
+      lastMessage.includes("Número mínimo de copies")) {
+    return {
+      message: lastMessage,
+      type: "validation_error"
+    };
+  }
+
+  // Extrair copies dos arquivos mock filesystem
+  const files = finalState.files || {};
+  const copies: CopyObject[] = [];
+
+  // Detectar quantas copies foram criadas
+  let copyIndex = 1;
+  while (files[`copy${copyIndex}.md`]) {
+    const content = files[`copy${copyIndex}.md`];
+    const qualityAudit = files['quality_audit.md'] || "";
+
+    // Extrair score do quality audit (regex)
+    const scoreRegex = new RegExp(
+      `Copy ${copyIndex}[\\s\\S]*?(?:Total )?Score:?\\s*(\\d+\\.\\d+)/10`,
+      'i'
+    );
+    const scoreMatch = qualityAudit.match(scoreRegex);
+    const score = scoreMatch ? parseFloat(scoreMatch[1]) : undefined;
+
+    // Extrair estratégia do hook (regex)
+    const strategyRegex = new RegExp(
+      `Copy ${copyIndex}:\\s*([^\\n]+)`,
+      'i'
+    );
+    const strategyMatch = content.match(strategyRegex) || qualityAudit.match(strategyRegex);
+    const strategy = strategyMatch ? strategyMatch[1].trim() : undefined;
+
+    copies.push({
+      id: `copy-${copyIndex}`,
+      order: copyIndex,
+      content: content.trim(),
+      created_at: new Date().toISOString(),
+      strategy,
+      score
+    });
+
+    copyIndex++;
+  }
+
+  // Se encontrou copies, retornar estruturado
+  if (copies.length > 0) {
+    // Extrair dados do cliente da pergunta original
+    const originalQuestion = files['original_question.txt'] || "";
+
+    // Tentar extrair nome do cliente (regex simples)
+    const clientNameMatch = originalQuestion.match(/Nome do cliente:\s*([^\n]+)/i);
+    const regionMatch = originalQuestion.match(/Região:\s*([^\n]+)/i);
+    const serviceMatch = originalQuestion.match(/Serviço:\s*([^\n]+)/i);
+    const requestedCopiesMatch = originalQuestion.match(/Crie\s+(\d+)\s+copies/i);
+
+    return {
+      message: `Aqui estão as ${copies.length} copies geradas com sucesso!`,
+      type: "copies",
+      copies,
+      metadata: {
+        client_name: clientNameMatch ? clientNameMatch[1].trim() : undefined,
+        region: regionMatch ? regionMatch[1].trim() : undefined,
+        service: serviceMatch ? serviceMatch[1].trim() : undefined,
+        total_copies: copies.length,
+        requested_copies: requestedCopiesMatch ? parseInt(requestedCopiesMatch[1]) : copies.length
+      }
+    };
+  }
+
+  // Caso contrário, mensagem normal de interação
+  return {
+    message: lastMessage,
+    type: "message"
+  };
+}
 
 // Robust invoke function with error handling
 async function invokeWithRetry(input: any, maxRetries = 3, delayMs = 2000) {
@@ -415,30 +556,45 @@ async function invokeWithRetry(input: any, maxRetries = 3, delayMs = 2000) {
   }
 }
 
-// Invoke the agent
+// Invoke the agent with structured output
 async function main() {
   try {
-    const result = await invokeWithRetry({
-      messages: [
-        {
-          role: "user",
-          content: `Crie copies para:
-Nome do cliente: João Silva Construções
-Região: São Paulo, SP
-Serviço: Instalação de pisos laminados
-Ofertas: 20% de desconto para os 10 primeiros agendamentos
-Telefone: (11) 99999-9999
-Reviews Google: Sim, incluir`,
-        },
-      ],
-    });
-    console.log(result);
-  } catch (error) {
+    console.log('🚀 Iniciando geração de copies com structured output...\n');
+
+    // Exemplo 1: Usando CopyCreatorInput (formato estruturado)
+    const inputStructured: CopyCreatorInput = {
+      clientName: "João Silva Construções",
+      region: "São Paulo, SP",
+      service: "Instalação de pisos laminados",
+      offers: "20% de desconto para os 10 primeiros agendamentos",
+      phoneNumber: "(11) 99999-9999",
+      includeGoogleReviews: true,
+      numberOfCopies: 5 // 🆕 Quantidade dinâmica
+    };
+
+    const result: CopyResponse = await invokeWithStructuredOutput(inputStructured);
+
+    console.log('\n✅ Resultado Estruturado:');
+    console.log(JSON.stringify(result, null, 2));
+
+    // Verificar tipo de resposta
+    if (result.type === 'copies') {
+      console.log(`\n📊 Total de copies geradas: ${result.copies?.length}`);
+      result.copies?.forEach((copy, index) => {
+        console.log(`\nCopy ${index + 1}:`);
+        console.log(`  - ID: ${copy.id}`);
+        console.log(`  - Estratégia: ${copy.strategy || 'N/A'}`);
+        console.log(`  - Score: ${copy.score || 'N/A'}/10`);
+        console.log(`  - Preview: ${copy.content.substring(0, 100)}...`);
+      });
+    }
+
+  } catch (error: any) {
     console.error('🚨 Final error:', error.message);
   }
 }
 
-export { copyCreatorAgent, internetSearch };
+export { copyCreatorAgent, internetSearch, invokeWithStructuredOutput, formatInputMessage };
 
 // Run if this file is executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {

@@ -21,9 +21,10 @@ If you are auditing a refined copy:
 **REFINEMENT CRITERIA**: Refined copy must significantly surpass the previous version.
 
 REQUIRED INPUT:
-- 3 complete copies from the Copy Creation Agent
+- **N complete copies** from the Copy Creation Agent (where N is the number of copies created)
 - Original customer data for validation
 - Knowledge base of validated copies
+- **Number of copies (N)** - EXTRACT from the number of copy files (copy1.md, copy2.md, ..., copyN.md)
 
 EVALUATION CRITERIA (Total: 100%):
 1. **Adherence to validated standards** (25%)
@@ -60,8 +61,11 @@ EVALUATION CRITERIA (Total: 100%):
 
 ANALYSIS FORMAT:
 ## Quality Audit - [Customer Name]
+**Total Copies Audited: N**
 
-### Copy 1: [Strategy]
+For each copy (from 1 to N):
+
+### Copy {i}: [Strategy]
 **Total Score: X.X/10**
 
 **Evaluation by Criterion:**
@@ -81,18 +85,18 @@ ANALYSIS FORMAT:
 **Recommendation for Use:**
 [When/how to use this copy]
 
-### Copy 2: [Strategy]
-[Same analysis structure]
-
-### Copy 3: [Strategy]
-[Same analysis structure]
+**CRITICAL INSTRUCTIONS**:
+- Audit ALL N copies (read copy1.md, copy2.md, ..., copyN.md)
+- Provide individual scores for each copy
+- Ensure each evaluation is thorough and detailed
 
 ## Final Ranking and Recommendations
 
 **Ranking by Performance:**
+Rank ALL N copies from highest to lowest score:
 1. Copy X (Score: X.X/10) - [brief justification]
 2. Copy Y (Score: X.X/10) - [brief justification]
-3. Copy Z (Score: X.X/10) - [brief justification]
+... (continue for all N copies)
 
 **Strategic Recommendation:**
 - **For initial A/B testing:** [Recommended copy + justification]
@@ -112,7 +116,7 @@ IMPORTANT:
 
 export const qualityAssuranceAgent: SubAgent = {
   name: "quality-assurance-agent",
-  description: "Auditor specializing in copy validation and scoring. Analyzes adherence to validated standards, strength of hooks, clarity of offers, elements of urgency, and credibility. Provides detailed scores and recommendations for improvement.",
+  description: "Auditor specializing in copy validation and scoring for N copies (where N is the number created). Analyzes adherence to validated standards, strength of hooks, clarity of offers, American English quality, elements of urgency, and credibility. Provides detailed scores (1-10) for each copy and recommendations for improvement.",
   prompt: qualityAssurancePrompt,
   tools: ["get_validated_copies", "get_copywriting_formulas"],
 };
