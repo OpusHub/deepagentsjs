@@ -18,7 +18,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,js,json,md}\" \"examples/**/*.{ts,js,json,md}\"",
     "prepublishOnly": "yarn build",
     "test": "echo \"Error: no test specified\" && exit 0",
-    "start": "npx @langchain/langgraph-cli dev --host 0.0.0.0 --port ${PORT:-8080}",
+    "start": "npx @langchain/langgraph-cli up --host 0.0.0.0 --port ${PORT:-8080}",
     "railway:dev": "npx @langchain/langgraph-cli dev --host 0.0.0.0 --port ${PORT:-8080}"
   },
   "repository": {
