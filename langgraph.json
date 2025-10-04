@@ -1,0 +1,7 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "copy-creator": "./examples/research/copy-creator-agent.ts:copyCreatorAgent"
+  },
+  "env": "./examples/research/.env"
+}
